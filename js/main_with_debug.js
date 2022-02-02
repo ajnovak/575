@@ -17,6 +17,7 @@ var cityPop = [
 	}
 ];
 
+
 function addColumns(cityPop){
     
     document.querySelectorAll("tr").forEach(function(row, i){
