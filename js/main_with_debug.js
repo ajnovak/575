@@ -1,3 +1,9 @@
+function initialize(){
+	cities();
+	console.log('cities function runs');
+};
+
+function cities(){}
 var cityPop = [
 	{ 
 		city: 'Madison',
@@ -16,10 +22,24 @@ var cityPop = [
 		population: 27244
 	}
 ];
+var table = document.createElement("table");
+var headerRow = document.createElement("tr");
+table.appendChild(headerRow);
+headerRow insertAdjacentHTML("beforeend","<th>City</th><th>Population</th>");
 
+cityPop.forEach(function(cityObject){
+	var rowHtml= "<tr><td>" + cityObject.city + "</td><td>" + cityObject.population + "</td></tr>";
+	table.insertAdjacentHTML('beforeend', rowHtml);
+});
+
+document.querySelector('#mydiv').appendChild(table);
+addColumns(cityPop);
+addEvents();
+
+};
 
 function addColumns(cityPop){
-    
+    var rows = document.querySelectorAll("tr"); // define var for tr
     document.querySelectorAll("tr").forEach(function(row, i){
 
     	if (i == 0){
@@ -33,13 +53,17 @@ function addColumns(cityPop){
     			citySize = 'Small';
 
     		} else if (cityPop[i-1].population < 500000){
-    			citysize = 'Medium';
+    			citySize = 'Medium';
 
     		} else {
     			citySize = 'Large';
     		};
 
 			row.insertAdjacntHTML = '<td' + citySize + '</td>';
+
+			var newRow = document.createElement("td");
+				newRow.innerHTML citySize;
+				row.appedChild (newRow);
     	};
     });
 };
@@ -73,3 +97,5 @@ function addEvents(){
 
 	document.querySelector("table").addEventListener("click", clickme)
 };
+
+document.addEventListener('DOMContentLoaded',initialize)
