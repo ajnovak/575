@@ -1,97 +1,141 @@
+function initialize(){ //use main function
+	cities(); //call cities function
+	debugAjax(); //call ajax fetch function
 
-//initialize function called when the script loads
-function initialize(){
-    cities();
 };
 
-//function to create a table with cities and their populations
+
+
 function cities(){
-    //define an array of objects for cities and population
-    //Example 2.3 line 8...create an empty array
-    var cityPop = [];
+//define variable that contains main array
+var cityPop = [
+	{ 
+		city: 'Madison',
+		population: 233209
+	},
+	{
+		city: 'Milwaukee',
+		population: 594833
+	},
+	{
+		city: 'Green Bay',
+		population: 104057
+	},
+	{
+		city: 'Superior',
+		population: 27244
+	}
+];
 
-    //create the first city object
-    var madison = {};
-    //add each property to the object
-    madison.city = 'Madison';
-    madison.population = 233209;
+var table = document.createElement("table"); //table creation
 
-    //push the city object into the array
-    cityPop.push(madison);
+var headerRow = document.createElement("tr"); //creating table header
 
-    //repeat...
-    var milwaukee = {};
-    milwaukee.city = 'Milwaukee';
-    milwaukee.population = 594833;
-    cityPop.push(milwaukee);
+table.appendChild(headerRow); //add header row
 
-    var greenBay = {};
-    greenBay.city = 'Green Bay';
-    greenBay.population = 104057;
-    cityPop.push(greenBay);
+headerRow.insertAdjacentHTML("beforeend","<th>City</th><th>Population</th>"); //city and population categories in header
 
-    var superior = {};
-    superior.city = 'Superior';
-    superior.population = 27244;
-    cityPop.push(superior);
+cityPop.forEach(function(cityObject){
+	var rowHtml = "<tr><td>" + cityObject.city + "</td><td>" + cityObject.population + "</td></tr>";
+	table.insertAdjacentHTML('beforeend', rowHtml);
+});
 
-    //...
+document.querySelector('#mydiv').appendChild(table);
 
-
-
-    //create the table element
-    var table = document.createElement("table");
-
-    //create a header row
-    var headerRow = document.createElement("tr");
-
-    //add the "City" column
-    var cityHeader = document.createElement("th");
-    cityHeader.innerHTML = "City";
-    headerRow.appendChild(cityHeader);
-
-    //add the "Population" column
-    var popHeader = document.createElement("th");
-    popHeader.innerHTML = "Population";
-    headerRow.appendChild(popHeader);
-
-    //add the row to the table
-    table.appendChild(headerRow);
-
-    //loop to add a new row for each city
-    /* for (var i = 0; i < cities.length; i++){
-        var tr = document.createElement("tr");
-
-        var city = document.createElement("td");
-        city.innerHTML = cities[i];
-        tr.appendChild(city);
-
-        var pop = document.createElement("td");
-        pop.innerHTML = population[i];
-        tr.appendChild(pop);
-
-        table.appendChild(tr);
-    };
-    */
-       //Example 2.3 line 41...loop to add a new row for each city
-       for (var i = 0; i < cityPop.length; i++){
-        var tr = document.createElement("tr");
-
-        var city = document.createElement("td");
-        city.innerHTML = cityPop[i].city; //NOTE DIFFERENT SYNTAX
-        tr.appendChild(city);
-
-        var pop = document.createElement("td");
-        pop.innerHTML = cityPop[i].population; //NOTE DIFFERENT SYNTAX
-        tr.appendChild(pop);
-
-        table.appendChild(tr);
-    };
-
-    //add the table to the div in index.html
-    var mydiv = document.getElementById("mydiv");
-    mydiv.appendChild(table);
+addColumns(cityPop); //calling the functions to create table
+addEvents();
 };
 
-//call the initialize function when the window has loaded
-window.onload = initialize();
+function addColumns(cityPop){ //function containing code to construct table columns
+    
+	var rows = document.querySelectorAll('tr');
+    document.querySelectorAll("tr").forEach(function(row, i){
+
+    	if (i == 0){
+
+    		row.insertAdjacentHTML('beforeend', '<th>City Size</th>'); //city size header element creation
+    	} else {
+
+    		var citySize; //variable creation for citySize array
+
+    		if (cityPop[i-1].population < 100000){
+    			citySize = 'Small';
+
+    		} else if (cityPop[i-1].population < 500000){
+    			citySize = 'Medium';
+
+    		} else {
+    			citySize = 'Large';
+    		};
+			
+			
+			row.insertAdjacntHTML = '<td' + citySize + '</td>';
+	
+			var newRow = document.createElement('td')
+			newRow.innerHTML = citySize
+			row.appendChild(newRow);
+		};
+    });
+};
+
+function addEvents(){ //function for event code supporting hover and click actions
+
+	document.querySelector("table").addEventListener("mouseover", function(){
+		
+		var color = "rgb(";
+
+		for (var i=0; i<3; i++){
+
+			var random = Math.round(Math.random() * 255);
+
+			color += random;
+
+			if (i<2){
+				color += ",";
+			
+			} else {
+				color += ")";
+		};
+
+		};
+
+		document.querySelector("table").style.color = color;
+	});
+
+	function clickme(){
+
+		alert('Hey, you clicked me!');
+	};
+
+	document.querySelector("table").addEventListener("click", clickme)
+};
+
+/* 
+The following lines of code are functions to fetch and print the data originally in MegaCities.csv, but now MegaCities.geojson
+*/
+
+function debugCallback(mydata){ //this is a callback function that receives the retrieved data and prints it on the html page
+	
+	document.querySelector("#mydiv").insertAdjacentHTML('beforeend', '<br/>GeoJSON data: <br>' + JSON.stringify(mydata))
+};
+
+function debugAjax(){ //this is our ajax fetch and conversion function
+	
+	var mydata; //define a variable for the cities data
+	
+	fetch("data/MegaCities.geojson") //this is a fetch request for the data
+		.then(function(response){
+			return response.json(); //data conversion
+		})
+		
+		.then(function(response){
+			mydata = response; //assign the fetched response to to the mydata variable
+			debugCallback(mydata); //pass the data to the callback function
+		
+		})
+
+	
+};
+
+
+window.onload = initialize(); //initialize the initializer
