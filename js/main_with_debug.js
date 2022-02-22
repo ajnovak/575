@@ -95,7 +95,7 @@ function addEvents(){ //function for event code supporting hover and click actio
 
 		};
 
-		document.querySelector("table")style.color = color;
+		document.querySelector("table").color = color;
 	});
 
 	function clickme(){
