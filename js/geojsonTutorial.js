@@ -9,7 +9,6 @@ L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_toke
     zoomOffset: -1,
     accessToken: 'pk.eyJ1Ijoic2VzYWVybyIsImEiOiJjbDBuNGhpcGIxY3IzM2pyNW96czFuMG84In0.De8p1x2EIr7DtypLDwRLrQ'
 }).addTo(map);
-}).addTo(map);
 
 
 var geojsonFeature = {
