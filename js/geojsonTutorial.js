@@ -1,9 +1,5 @@
-<<<<<<< Updated upstream
-var map = L.map('map').setView([51.505, -0.09], 13);
 
-=======
-var map = L.map('map').setView([100, -40], );
->>>>>>> Stashed changes
+var map = L.map('map').setView([51.505, -0.09], 13);
 
 L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
@@ -12,9 +8,7 @@ L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_toke
     tileSize: 512,
     zoomOffset: -1,
     accessToken: 'pk.eyJ1Ijoic2VzYWVybyIsImEiOiJjbDBuNGhpcGIxY3IzM2pyNW96czFuMG84In0.De8p1x2EIr7DtypLDwRLrQ'
-<<<<<<< Updated upstream
 }).addTo(map);
-=======
 }).addTo(map);
 
 
@@ -39,4 +33,3 @@ var myLines = [{
 }];
 
 L.geoJSON(myLines).addTo(map);
->>>>>>> Stashed changes
