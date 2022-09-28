@@ -34,19 +34,18 @@ function calcStats(data){
     //loop through each city
     for(var city of data.features){
         //loop through each year
-        for(var year = 2008; year <= 2020; year+=1){
-              //get number of bars for current year
-              var value = city.properties["Bars_"+ String(year)];
+        for(var year = 1957; year <= 2015; year+=1){
+    
+              var value = city.properties[String(year)];
               //add value to array
               allValues.push(value);
         }
     }
-    //define for years with no bars
+    //define for years with no launches
     dataStats.zero = 0;
     //define minimum value as 1, even though there are some locations with 0
     dataStats.min = 1;
     dataStats.max = 7;
-    //due to the nature of my data, the mean is 0.77 which obviously will not work, so i'll define it as 2
     dataStats.three = 3;
 }
 
@@ -72,13 +71,13 @@ function PopupContent(properties, attribute){
   this.attribute = attribute;
   this.year = attribute.split("_")[1];
   this.bars = this.properties[attribute];
-  this.formatted = "<p><b>City:</b> " + this.properties.city + "</p><p><b>Number of Bars in " + this.year + ":</b> " + this.bars + "</p>";
+  this.formatted = "<p><b>City:</b> " + this.properties.city + "</p><p><b>Number of launches in " + this.year + ":</b> " + this.bars + "</p>";
 }
 
 //function to convert markers to circle markers and add popups
-function pointToLayer(feature, latlng, attributes){
+function pointToLayer(feature, latlng, attribute){
     //Determine which attribute to visualize with proportional symbols
-    var attribute = attributes[0];
+    var attribute = attribute[0];
     //For each feature, determine its value for the selected attribute
     var attValue = Number(feature.properties[attribute]);
 
@@ -105,11 +104,11 @@ function pointToLayer(feature, latlng, attributes){
   };
 
 //create proportional symbols
-function createPropSymbols(data, attributes){
+function createPropSymbols(data, attribute){
     //create a Leaflet GeoJSON layer and add it to the map
     L.geoJson(data, {
         pointToLayer: function(feature, latlng){
-            return pointToLayer(feature, latlng, attributes);
+            return pointToLayer(feature, latlng, attribute);
         }
     }).addTo(map);
 };
@@ -136,22 +135,22 @@ function updatePropSymbols(attribute){
 };
 
 function processData(data){
-    //empty array to hold attributes
-    var attributes = [];
+    //empty array to hold attribute
+    var attribute = [];
     //properties of the first feature in the dataset
     var properties = data.features[0].properties;
-    //push each attribute name into attributes array
+    //push each attribute name into attribute array
     for (var attribute in properties){
-        //only take attributes with population values
+        //only take attribute with population values
         if (attribute.indexOf("Bars") > -1){
-            attributes.push(attribute);
+            attribute.push(attribute);
         };
     };
-    return attributes;
+    return attribute;
 };
 
 //Create new sequence controls
-function createSequenceControls(attributes){
+function createSequenceControls(attribute){
 var SequenceControl = L.Control.extend({
         options: {
             position: 'bottomleft'
@@ -178,7 +177,7 @@ var SequenceControl = L.Control.extend({
 
     map.addControl(new SequenceControl());
 
-    //set slider attributes
+    //set slider attribute
     $('.range-slider').attr({
         max: 12,
         min: 0,
@@ -205,7 +204,7 @@ var SequenceControl = L.Control.extend({
       //update slider
       $('.range-slider').val(index);
       //pass new attribute to update symbols
-        updatePropSymbols(attributes[index]);
+        updatePropSymbols(attribute[index]);
     });
 
     //input listener for slider
@@ -213,12 +212,12 @@ var SequenceControl = L.Control.extend({
       //get the new index value
       var index = $(this).val();
       //pass new attribute to update symbols
-        updatePropSymbols(attributes[index]);
+        updatePropSymbols(attribute[index]);
     });
   };
 
 //create legend
-function createLegend(attributes){
+function createLegend(attribute){
     var LegendControl = L.Control.extend({
         options: {
             position: 'bottomright'
@@ -270,12 +269,12 @@ function getData(map){
     //load the data
     $.getJSON("data/Rlaunches.geojson", function(response){
 
-            var attributes = processData(response);
+            var attribute = processData(response);
             calcStats(response);
             //call function to create proportional symbols
-            createPropSymbols(response,attributes);
-            createSequenceControls(attributes);
-            createLegend(attributes);
+            createPropSymbols(response,attribute);
+            createSequenceControls(attribute);
+            createLegend(attribute);
     });
 };
 

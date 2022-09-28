@@ -1,4 +1,8 @@
 /*Add CSS styles here*/
 #map { 
-    height: 512px;
+    height: 650px;
  }
+
+html {
+    background-color: rgb(43, 43, 43);
+}
