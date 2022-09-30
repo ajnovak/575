@@ -58,35 +58,35 @@ function setMap(){
         .projection(projection);
 
     //use Promise.all to parallelize asynchronous data loading
-    var promises = [d3.csv("../data/EnvJust.csv"),
-                    d3.json("../data/region.topojson"),
-                    d3.json("../data/counties.topojson")
+    var promises = [d3.csv("../data/.csv"),
+                    d3.json("../data/eur.topojson"),
+                    d3.json("../data/ger.topojson")
                    ];
     Promise.all(promises).then(callback);
 
 function callback(data){
     csvData = data[0];
-    region = data[1];
-    wisconsin = data[2];
+    europe = data[1];
+    germany = data[2];
 
 //place graticule on the map
         setGraticule(map, path);
 
 //translate europe TopoJSON
-        var midwest = topojson.feature(europe, europe.objects.EuropeCountries),
-            counties = topojson.feature(germany, germany.objects.german_states).features;
+        var europeCountries = topojson.feature(europe, europe.objects.EuropeCountries),
+            germanStates = topojson.feature(germany, germany.objects.german_states).features;
 
 //add Europe countries to map
         var countries = map.append("path")
-            .datum(midwest)
+            .datum(europeCountries)
             .attr("class", "countries")
             .attr("d", path);
 
-        counties = joinData(counties, csvData);
+        germanStates = joinData(germanStates, csvData);
 
         var colorScale = makeColorScale(csvData);
 
-        setEnumerationUnits(counties, map, path, colorScale);
+        setEnumerationUnits(germanStates, map, path, colorScale);
 
         //add coordinated visualization to the map
             setChart(csvData, colorScale);
@@ -123,16 +123,16 @@ function setGraticule(map, path){
             .attr("d", path); //project graticule lines
 }
 
-function joinData(counties, csvData){
+function joinData(germanStates, csvData){
 //loop through csv to assign each set of csv attribute values to geojson region
     for (var i=0; i<csvData.length; i++){
         var csvState = csvData[i]; //the current region
         var csvKey = csvState.NAME_1; //the CSV primary key
 
  //loop through geojson regions to find correct region
-        for (var a=0; a<counties.length; a++){
+        for (var a=0; a<germanStates.length; a++){
 
-            var geojsonProps = counties[a].properties; //the current region geojson properties
+            var geojsonProps = germanStates[a].properties; //the current region geojson properties
             var geojsonKey = geojsonProps.NAME_1; //the geojson primary key
 
             //where primary keys match, transfer csv data to geojson properties object
@@ -146,7 +146,7 @@ function joinData(counties, csvData){
             };
         };
     };
-    return counties;
+    return germanStates;
 }
 
 
@@ -242,10 +242,10 @@ function makeColorScale(data){
 };
 };
 
-function setEnumerationUnits(counties, map, path, colorScale){
+function setEnumerationUnits(germanStates, map, path, colorScale){
         //add German states to map
         var states = map.selectAll(".states")
-            .data(counties)
+            .data(germanStates)
             .enter()
             .append("path")
             .attr("class", function(d){
