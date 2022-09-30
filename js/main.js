@@ -48,11 +48,16 @@ function setMap(){
 
     //create Albers equal area conic projection centered on Germany
     var projection = d3.geoAlbers()
-        .center([2, 51])
-        .rotate([-8, 0])
-        .parallels([48, 53.6])
-        .scale(2500)
-        .translate([width / 2, height / 2]);
+
+    .center([0, 38.00])
+    
+    .rotate([99.18, 0, 0])
+    
+    .parallels([29.05, 45.5])
+    
+    .scale(1000)
+    
+    .translate([width / 2, height / 2]);
 
 	var path = d3.geoPath()
         .projection(projection);
