@@ -84,3 +84,7 @@ p {
     text-align: center;
     color: #969491;
 }
+
+.leaflet-popup-content-wrapper {
+    background-color: rgb(99, 99, 99);
+}
