@@ -7,13 +7,10 @@ function createMap(){
     map = L.map('map', {
         center: [38, 1],
         zoom:2,
-        //constrain zoom to United States
-   
-        //constrain pan to United States
  
     });
 
-    //add own custom base tilelayer, designed for this project
+    //add base tilelayer
      L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
         tileSize: 512,
         zoomOffset: -1,
@@ -38,15 +35,13 @@ function calcStats(data){
             }
         }
     }
-    //define for years with no launches
    
     
-   //get min, max, mean stats for our array
+   //get min, max, stats and add other stats for legend
    dataStats.min = 1
    dataStats.small = 5
    dataStats.max = Math.max(...allValues);
    dataStats.med = 35
-   //calculate meanValue
 
    console.log(allValues);
 }
@@ -92,7 +87,7 @@ function pointToLayer(feature, latlng, attributes){
         opacity: 1,
         fillOpacity: 0.8
      };
-    //Give each feature's circle marker a radius based on its attribute value
+     
     options.radius = calcPropRadius(attValue);
     //create circle marker layer
     var layer = L.circleMarker(latlng, options);
@@ -183,7 +178,7 @@ function createSequenceControls(attributes){
 
     map.addControl(new SequenceControl());
 
-    //set slider attribute
+    //set slider attribute to fit data
     document.querySelector(".range-slider").max = 58;
     document.querySelector(".range-slider").min = 0;
     document.querySelector(".range-slider").value = 0;
@@ -261,10 +256,10 @@ function createLegend(attributes){
                 svg += '<circle class="legend-circle" id="' + circles[i] + '" r="' + radius + '"cy="' + cy + '" fill="#ffe4c4" fill-opacity="0.8" stroke="#000000" cx="65"/>';
                 
                 //evenly space out labels            
-                var textY = i * 20 + 20;            
+                var textY = i * 34 + 25;            
                 
                 //text string            
-                svg += '<text id="' + circles[i] + '-text" x="65" y="' + textY + '">' + Math.round(dataStats[circles[i]]*100)/100 + '</text>';
+                svg += '<text id="' + circles[i] + '-text" x="130" y="' + textY + '">' + Math.round(dataStats[circles[i]]*100)/100 + '</text>';
             };
     
             //close svg string
